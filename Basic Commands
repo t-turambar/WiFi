@@ -1,0 +1,35 @@
+- airmon-ng
+```
+sudo airmon-ng start wlan0
+```
+- airodump-ng
+```
+sudo airodump-ng wlan0mon 
+
+sudo airodump-ng wlan0mon -w <outfile>
+
+sudo airodump-ng wlan0mon -c <channel_number>
+```
+	- --wps, --manufacturer
+- aireplay-ng
+```
+sudo aireplay-ng -0 <number_of_deauth_frames> -a <AP_BSSID> wlan0mon
+```
+- aircrack-ng
+```
+aircrack-ng <capture_file> -w <wordlist>
+```
+- airdecap-ng
+```
+airdecap-ng -e <ap_name> -p <password> <capture_file>
+```
+	- generates dec.cap file with decrypted traffic that can be read by wireshark. Discover IP address of HTTP server
+
+- wpa_supplicant - connect to wireless netowrk
+```
+wpa_supplicant -Dnl80211 -wlan0 -c <config_file>
+```
+- dhclient - obtain ip address via dhcp (requires interface to not be in monitor mode)
+```
+dhclient wlan2 -v
+```
